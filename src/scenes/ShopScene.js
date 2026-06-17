@@ -4,6 +4,7 @@ import { availableAssets, canAfford, buy } from '../systems/assetStore.js'
 import { resolvePerks, perkLabel } from '../systems/perks.js'
 import { advance } from '../systems/progression.js'
 import { burst, popText } from '../game/JuiceFx.js'
+import { sfx } from '../lib/audio.js'
 
 // Between-levels Asset Store: spend ₪ on Be'er Sheva assets (perks + boss points).
 export default class ShopScene extends Phaser.Scene {
@@ -112,6 +113,7 @@ export default class ShopScene extends Phaser.Scene {
 
   tryBuy(asset, x, y) {
     if (buy(this.profile, asset)) {
+      sfx(asset.win ? 'jackpot' : 'buy')
       burst(this, x, y, 0xffcb3d, 14)
       popText(this, x, y, `קנית! ${asset.label}`, '#2e9e5b')
       this.refreshWallet()

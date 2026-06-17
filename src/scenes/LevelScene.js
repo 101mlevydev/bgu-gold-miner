@@ -3,6 +3,7 @@ import Claw from '../game/Claw.js'
 import { shake, burst, popText } from '../game/JuiceFx.js'
 import { loadProfile, saveProfile } from '../state.js'
 import { resolvePerks } from '../systems/perks.js'
+import { sfx } from '../lib/audio.js'
 
 // Playable mine level: claw + crafted item tokens + ₪ scoring + timer + target + juice.
 // (Shop/Map/Boss/audio come in later steps; this is the polished core loop.)
@@ -174,6 +175,7 @@ export default class LevelScene extends Phaser.Scene {
     if (!nullified && item.data.timePenalty) this.timeLeft = Math.max(0, this.timeLeft - item.data.timePenalty)
 
     const { x, y } = item.display
+    sfx(jackpot ? 'jackpot' : good ? 'good' : 'bad')
     shake(this, good ? (jackpot ? 0.018 : 0.007) : 0.012, good ? (jackpot ? 260 : 130) : 180)
     burst(this, x, y, good ? (jackpot ? 0xffcb3d : 0xf4b740) : 0xc0473b, good ? (jackpot ? 16 : 9) : 8)
     popText(this, x, y, (v >= 0 ? '+' : '') + v, good ? '#2e9e5b' : '#c0473b')

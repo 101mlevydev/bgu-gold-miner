@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import { CHARACTERS } from '../systems/CharacterManager.js'
 import { loadProfile, saveProfile, resetProfile, hasSave } from '../state.js'
+import { setMuted } from '../lib/audio.js'
 
 const C = {
   ink: '#3a2a1a',
@@ -70,6 +71,7 @@ export default class MenuScene extends Phaser.Scene {
 
     // Mute toggle (audio wired in Step 17)
     const muted = this.registry.get('muted') || false
+    setMuted(muted)
     const mute = this.add
       .text(60, 60, muted ? '🔇' : '🔊', { fontSize: '40px' })
       .setInteractive({ useHandCursor: true })
@@ -77,6 +79,7 @@ export default class MenuScene extends Phaser.Scene {
       const now = !this.registry.get('muted')
       this.registry.set('muted', now)
       this.sound.mute = now
+      setMuted(now)
       mute.setText(now ? '🔇' : '🔊')
     })
   }

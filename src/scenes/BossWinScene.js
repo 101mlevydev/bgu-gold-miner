@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import { loadProfile, resetProfile } from '../state.js'
 import { getCharacter } from '../systems/CharacterManager.js'
+import { sfx } from '../lib/audio.js'
 
 // The payoff: crowned Boss of Be'er Sheva (bought the mayor's office).
 export default class BossWinScene extends Phaser.Scene {
@@ -17,6 +18,7 @@ export default class BossWinScene extends Phaser.Scene {
     const bg = this.add.graphics()
     bg.fillGradientStyle(0x2a1c0e, 0x2a1c0e, 0x5a3a18, 0x5a3a18, 1)
     bg.fillRect(0, 0, W, H)
+    sfx('jackpot')
 
     // confetti rain
     const confetti = ['🎉', '✨', '🎊', '⭐', '👑']
