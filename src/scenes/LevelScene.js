@@ -1,9 +1,11 @@
 import Phaser from 'phaser'
 import Claw from '../game/Claw.js'
-import { loadProfile } from '../state.js'
+import { shake, burst, popText } from '../game/JuiceFx.js'
+import { loadProfile, saveProfile } from '../state.js'
+import { resolvePerks } from '../systems/perks.js'
 
-// First playable mine level: claw + weighted item field + ₪ scoring + timer + target.
-// (GameOver/Shop/Map/juice come in later steps; this proves the core loop.)
+// Playable mine level: claw + crafted item tokens + ₪ scoring + timer + target + juice.
+// (Shop/Map/Boss/audio come in later steps; this is the polished core loop.)
 
 const EMOJI = {
   psychometric747: '🎯', scholarship: '💰', dorms: '🛏️', perfectGrade: '💯',
@@ -13,7 +15,7 @@ const EMOJI = {
   trainDelay: '🚆', aromaPricey: '💸'
 }
 
-const PIT = { x0: 90, x1: 630, y0: 330, y1: 1150 }
+const PIT = { x0: 95, x1: 625, y0: 360, y1: 1150 }
 const ITEM_COUNT = 12
 
 export default class LevelScene extends Phaser.Scene {
@@ -23,6 +25,7 @@ export default class LevelScene extends Phaser.Scene {
 
   create() {
     const W = this.scale.width
+    const H = this.scale.height
     this.profile = loadProfile()
     const levels = this.registry.get('levels')
     const district =
@@ -36,30 +39,44 @@ export default class LevelScene extends Phaser.Scene {
     this.reached = false
     this.over = false
 
-    // pools
+    // perks from owned assets (Step 14)
+    this.perks = resolvePerks(this.profile, this.registry.get('assets'))
+    this.timeLeft += this.perks.timeBonus
+    this.incomeMult = this.perks.incomeMult
+    this.insurance = this.perks.insurance
+    this.grabRadius = 52 + this.perks.magnet
+
     const all = this.registry.get('collectibles').items
     this.valuables = all.filter((i) => i.kind === 'valuable')
     this.obstacles = all.filter((i) => i.kind === 'obstacle')
 
-    // background + pit
-    this.add.rectangle(0, 0, W, this.scale.height, 0xfff7ea).setOrigin(0)
-    this.add.rectangle(0, PIT.y0 - 20, W, this.scale.height, 0xf4e2c4).setOrigin(0)
+    // crafted background: warm vertical gradient + a dig-pit panel
+    const bg = this.add.graphics()
+    bg.fillGradientStyle(0xfff7ea, 0xfff7ea, 0xead2a8, 0xdcc096, 1)
+    bg.fillRect(0, 0, W, H)
+    const pit = this.add.graphics()
+    pit.fillStyle(0xf4e2c4, 1)
+    pit.fillRoundedRect(40, PIT.y0 - 60, W - 80, H - (PIT.y0 - 60) + 40, { tl: 28, tr: 28, bl: 0, br: 0 })
+    pit.lineStyle(3, 0xe0c79a, 1)
+    pit.strokeRoundedRect(40, PIT.y0 - 60, W - 80, 200, { tl: 28, tr: 28, bl: 0, br: 0 })
 
-    // HUD
-    this.add.rectangle(0, 0, W, 150, 0xd9743b).setOrigin(0)
+    // HUD bar (rounded bottom corners for craft)
+    const hud = this.add.graphics()
+    hud.fillStyle(0xd9743b, 1)
+    hud.fillRoundedRect(-12, -12, W + 24, 162, { tl: 0, tr: 0, bl: 26, br: 26 })
     this.add
       .text(W / 2, 36, district.label, {
         fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '26px', color: '#fff7ea'
       })
       .setOrigin(0.5)
     this.moneyText = this.add
-      .text(W - 24, 100, '', { fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '40px', color: '#ffffff', fontStyle: 'bold' })
+      .text(W - 26, 100, '', { fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '42px', color: '#ffffff', fontStyle: 'bold' })
       .setOrigin(1, 0.5)
     this.timerText = this.add
-      .text(W / 2, 100, '', { fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '40px', color: '#ffffff', fontStyle: 'bold' })
+      .text(W / 2, 100, '', { fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '42px', color: '#ffffff', fontStyle: 'bold' })
       .setOrigin(0.5)
     this.targetText = this.add
-      .text(24, 100, '', { fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '34px', color: '#fff7ea' })
+      .text(26, 100, '', { fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '34px', color: '#fff7ea' })
       .setOrigin(0, 0.5)
     this.refreshHud()
 
@@ -68,9 +85,10 @@ export default class LevelScene extends Phaser.Scene {
     for (let i = 0; i < ITEM_COUNT; i++) this.spawnItem()
 
     // claw
-    this.claw = new Claw(this, W / 2, 150)
+    this.claw = new Claw(this, W / 2, 152)
     this.claw.onGrabTest = (x, y, r) => this.grabTest(x, y, r)
     this.claw.onCollect = (item) => this.collect(item)
+    this.claw.clawSpeedMult = this.perks.reelMult
 
     // input
     this.input.on('pointerdown', () => this.claw.drop())
@@ -105,42 +123,63 @@ export default class LevelScene extends Phaser.Scene {
     const data = this.weightedPick(isObstacle ? this.obstacles : this.valuables)
     const x = Phaser.Math.Between(PIT.x0, PIT.x1)
     const y = Phaser.Math.Between(PIT.y0, PIT.y1)
-    const size = 30 + (data.weight || 1) * 8
-    const txt = this.add.text(x, y, EMOJI[data.id] || '❓', { fontSize: `${size}px` }).setOrigin(0.5)
-    this.items.push({ txt, data, alive: true })
+    const display = this.makeToken(data, x, y)
+    const item = { display, data, alive: true }
+    // gentle idle pulse (scale only — doesn't fight the claw's position control)
+    item.pulse = this.tweens.add({
+      targets: display, scale: { from: 0.95, to: 1.05 }, yoyo: true, repeat: -1,
+      duration: 1300 + Math.random() * 600, ease: 'Sine.InOut', delay: Math.random() * 800
+    })
+    this.items.push(item)
+  }
+
+  makeToken(data, x, y) {
+    const good = data.kind === 'valuable'
+    const r = 30 + (data.weight || 1) * 7
+    const shadow = this.add.circle(0, 5, r, 0x000000, 0.12)
+    const back = this.add.circle(0, 0, r, good ? 0xffffff : 0xf6d2cb, 1).setStrokeStyle(4, good ? 0xe0a96b : 0xc0473b)
+    const hi = this.add.circle(-r * 0.32, -r * 0.32, r * 0.34, 0xffffff, 0.5)
+    const emoji = this.add.text(0, 0, EMOJI[data.id] || '❓', { fontSize: `${Math.round(r * 1.05)}px` }).setOrigin(0.5)
+    return this.add.container(x, y, [shadow, back, hi, emoji]).setSize(r * 2, r * 2)
   }
 
   grabTest(x, y, r) {
     let best = null
-    let bestD = r
+    let bestD = this.grabRadius || r
     for (const it of this.items) {
       if (!it.alive) continue
-      const d = Phaser.Math.Distance.Between(x, y, it.txt.x, it.txt.y)
+      const d = Phaser.Math.Distance.Between(x, y, it.display.x, it.display.y)
       if (d < bestD) {
         bestD = d
         best = it
       }
     }
-    if (best) best.alive = false
+    if (best) {
+      best.alive = false
+      if (best.pulse) best.pulse.stop()
+      best.display.setScale(1)
+    }
     return best
   }
 
   collect(item) {
-    const v = item.data.value || 0
+    let v = item.data.value || 0
+    const good = v >= 0
+    let nullified = false
+    if (good) v = Math.round(v * (this.incomeMult || 1))
+    else if (this.insurance > 0) { this.insurance -= 1; v = 0; nullified = true }
+    const jackpot = v >= 400
     this.money += v
     if (item.data.timeBonus) this.timeLeft += item.data.timeBonus
-    if (item.data.timePenalty) this.timeLeft = Math.max(0, this.timeLeft - item.data.timePenalty)
+    if (!nullified && item.data.timePenalty) this.timeLeft = Math.max(0, this.timeLeft - item.data.timePenalty)
 
-    // float a +/- popup
-    const pop = this.add
-      .text(item.txt.x, item.txt.y, (v >= 0 ? '+' : '') + v, {
-        fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '34px', fontStyle: 'bold',
-        color: v >= 0 ? '#2e9e5b' : '#c0473b'
-      })
-      .setOrigin(0.5)
-    this.tweens.add({ targets: pop, y: pop.y - 60, alpha: 0, duration: 700, onComplete: () => pop.destroy() })
+    const { x, y } = item.display
+    shake(this, good ? (jackpot ? 0.018 : 0.007) : 0.012, good ? (jackpot ? 260 : 130) : 180)
+    burst(this, x, y, good ? (jackpot ? 0xffcb3d : 0xf4b740) : 0xc0473b, good ? (jackpot ? 16 : 9) : 8)
+    popText(this, x, y, (v >= 0 ? '+' : '') + v, good ? '#2e9e5b' : '#c0473b')
 
-    item.txt.destroy()
+    this.tweens.killTweensOf(item.display)
+    item.display.destroy()
     this.items = this.items.filter((it) => it !== item)
     this.spawnItem()
 
@@ -163,24 +202,32 @@ export default class LevelScene extends Phaser.Scene {
     if (this.tickEvent) this.tickEvent.remove()
     this.input.removeAllListeners()
     const W = this.scale.width
+    const H = this.scale.height
     const win = this.money >= this.target
-    this.add.rectangle(0, 0, W, this.scale.height, 0x000000, 0.55).setOrigin(0)
+    if (win) {
+      this.profile.money += this.money // bank level earnings into the wallet
+      saveProfile()
+    }
+
+    this.add.rectangle(0, 0, W, H, 0x000000, 0.55).setOrigin(0).setDepth(70)
+    const panel = this.add.graphics().setDepth(71)
+    panel.fillStyle(0xfff7ea, 1)
+    panel.fillRoundedRect(W / 2 - 280, 440, 560, 360, 28)
     this.add
       .text(W / 2, 520, win ? '🎉 עברת את השלב!' : '⏰ נגמר הזמן', {
-        fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '52px', color: '#fff7ea', fontStyle: 'bold'
+        fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '50px', color: '#b4521f', fontStyle: 'bold'
       })
-      .setOrigin(0.5)
+      .setOrigin(0.5).setDepth(72)
     this.add
-      .text(W / 2, 600, `💰 ${this.money} / 🎯 ${this.target}`, {
-        fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '36px', color: '#ffffff'
+      .text(W / 2, 610, `💰 ${this.money} / 🎯 ${this.target}`, {
+        fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '36px', color: '#3a2a1a'
       })
-      .setOrigin(0.5)
+      .setOrigin(0.5).setDepth(72)
     const btn = this.add
-      .text(W / 2, 720, win ? '↩ לתפריט (חנות בקרוב)' : '↩ נסה שוב', {
-        fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '34px', color: '#ffcb3d', fontStyle: 'bold'
+      .text(W / 2, 720, win ? '▶ לחנות הנכסים' : '↩ עוד ניסיון', {
+        fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '34px', color: '#1e8a7a', fontStyle: 'bold'
       })
-      .setOrigin(0.5)
-      .setInteractive({ useHandCursor: true })
-    btn.on('pointerdown', () => this.scene.start(win ? 'Menu' : 'Level'))
+      .setOrigin(0.5).setDepth(72).setInteractive({ useHandCursor: true })
+    btn.on('pointerdown', () => this.scene.start(win ? 'Shop' : 'Level'))
   }
 }

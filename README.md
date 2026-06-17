@@ -41,6 +41,10 @@ love-letter to Be'er Sheva you can *own*.
 
 ---
 
+> 🏆 **Built to win.** Held to the suite-wide **[QUALITY-BAR.md](../QUALITY-BAR.md)** —
+> top-quality, demo-flawless, zero rough edges. Signature moments: the **jackpot grab** + the
+> **Boss coronation**.
+
 ## Documents
 
 1. **[PRD.md](./PRD.md)** — concept, ICP, the two-layer loop (mine + economy), districts, asset

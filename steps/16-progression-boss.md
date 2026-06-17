@@ -1,6 +1,6 @@
 # Step 16 — Progression gating + BossWinScene
 
-**Phase:** Progression · **Status:** todo · **Depends on:** 15
+**Phase:** Progression · **Status:** ⏳ done (progression.js + BossWinScene) — pending run verify · **Depends on:** 13
 
 ## Goal
 Districts unlock by progress; buying the mayor's office wins the game with a big celebration.

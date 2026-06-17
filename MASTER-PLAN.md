@@ -32,6 +32,9 @@ Everything else runs autonomously between/after the gates.
 6. Finish when the **Definition of Done** is fully green.
 
 ## Definition of Done
+> **Inherits [QUALITY-BAR.md](../QUALITY-BAR.md).** "Builds and runs" is the floor. Craft, juice,
+> feel, native-Hebrew copy, and a flawless rehearsed demo are **gates**, not extras.
+- [ ] Meets the QUALITY-BAR standard (visual craft · motion/juice · audio · feel · 60fps · no console errors).
 - [ ] `npm run build` → static output; loads with no console errors; runs under strict CSP & offline.
 - [ ] Character select → play a mine level (claw swing/drop/grab, weight-scaled reel, ₪/timer/target).
 - [ ] Shop: buy a Be'er Sheva asset → perk applies next level → owned asset **lights up on the map**.

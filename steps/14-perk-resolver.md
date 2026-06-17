@@ -1,6 +1,6 @@
 # Step 14 — PerkResolver
 
-**Phase:** Economy · **Status:** todo · **Depends on:** 13
+**Phase:** Economy · **Status:** ⏳ done (perks.js applied at level start) — pending run verify · **Depends on:** 13
 
 ## Goal
 Owned assets/upgrades actually change gameplay next level.

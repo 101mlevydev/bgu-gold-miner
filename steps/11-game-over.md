@@ -1,6 +1,6 @@
 # Step 11 — GameOverScene + instant retry
 
-**Phase:** Core · **Status:** todo · **Depends on:** 10
+**Phase:** Core · **Status:** ⏳ done (instant retry in LevelScene.endLevel) — pending run verify · **Depends on:** 10
 
 ## Goal
 Friendly failure: retry instantly, keep ₪/assets (no punishment).

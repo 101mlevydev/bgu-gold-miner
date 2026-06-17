@@ -3,6 +3,8 @@ import './styles/base.css'
 import BootScene from './scenes/BootScene.js'
 import MenuScene from './scenes/MenuScene.js'
 import LevelScene from './scenes/LevelScene.js'
+import ShopScene from './scenes/ShopScene.js'
+import BossWinScene from './scenes/BossWinScene.js'
 
 // Portrait design resolution; Phaser scales this to fit any device (Step 19).
 export const GAME_W = 720
@@ -22,7 +24,7 @@ const config = {
     default: 'arcade',
     arcade: { gravity: { y: 0 }, debug: false }
   },
-  scene: [BootScene, MenuScene, LevelScene]
+  scene: [BootScene, MenuScene, LevelScene, ShopScene, BossWinScene]
 }
 
 // eslint-disable-next-line no-new

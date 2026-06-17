@@ -1,6 +1,6 @@
 # Step 12 — SaveManager (localStorage profile, no login)
 
-**Phase:** Systems · **Status:** todo · **Depends on:** 10
+**Phase:** Systems · **Status:** ⏳ done (state.js profile, no login) — pending run verify · **Depends on:** 10
 
 ## Goal
 Persist the whole run for the same user with zero login.

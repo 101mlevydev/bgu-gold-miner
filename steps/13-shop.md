@@ -1,6 +1,6 @@
 # Step 13 — ShopScene + AssetStore (buy flow)
 
-**Phase:** Economy · **Status:** todo · **Depends on:** 12
+**Phase:** Economy · **Status:** ⏳ done (ShopScene + assetStore) — pending run verify · **Depends on:** 12
 
 ## Goal
 Spend ₪ on Be'er Sheva assets between levels.

@@ -57,6 +57,10 @@ export default class Claw {
       if (hit) {
         this.attached = hit
         this.state = 'retract'
+        // squash the claw on the catch (game feel)
+        this.scene.tweens.add({
+          targets: this.tip, scaleX: 1.35, scaleY: 0.7, yoyo: true, duration: 110, ease: 'Quad.Out'
+        })
       } else if (this.len >= MAX_LEN) {
         this.state = 'retract'
       }
@@ -65,7 +69,7 @@ export default class Claw {
       this.len -= (BASE_RETRACT * this.clawSpeedMult / w) * delta
       if (this.attached) {
         const { x, y } = this.tipPos()
-        this.attached.txt.setPosition(x, y + 30)
+        this.attached.display.setPosition(x, y + 30)
       }
       if (this.len <= MIN_LEN) {
         this.len = MIN_LEN
