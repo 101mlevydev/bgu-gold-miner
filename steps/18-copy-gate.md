@@ -1,6 +1,6 @@
 # Step 18 — Copy gate (tutorial + Hebrew slang) ⛔ APPROVAL
 
-**Phase:** Gate · **Status:** todo · **Depends on:** 16
+**Phase:** Gate · **Status:** ⛔ artifact ready (design/copy-review.md) — awaiting native-speaker pass · **Depends on:** 16
 
 ## Goal
 All player-facing text in authentic, cool Be'er Sheva student Hebrew — **must not read as AI**.

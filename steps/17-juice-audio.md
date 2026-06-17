@@ -1,6 +1,6 @@
 # Step 17 — Juice pass + audio
 
-**Phase:** Polish · **Status:** todo · **Depends on:** 10, 16
+**Phase:** Polish · **Status:** ⏳ done (JuiceFx + Web Audio SFX + mute) — pending run verify · **Depends on:** 10, 16
 
 ## Goal
 Make it *feel* great — most of the perceived quality.

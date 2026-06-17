@@ -1,6 +1,6 @@
 # Step 19 — Responsive (scale + input + devices)
 
-**Phase:** Polish · **Status:** todo · **Depends on:** 10
+**Phase:** Polish · **Status:** ⏳ mostly done (Scale.FIT portrait + touch/mouse/Space input) — device verify pending · **Depends on:** 10
 
 ## Goal
 One canvas that plays well on phone, iPad/tablet, and laptop.
