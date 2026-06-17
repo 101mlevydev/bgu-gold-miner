@@ -1,6 +1,6 @@
 # Step 15 — MapScene (districts + owned assets light up + boss meter)
 
-**Phase:** Progression · **Status:** ⛔ DEFERRED — loop works via Shop→advance; the visual district map (owned assets lighting up) is a quality add still TODO · **Depends on:** 13
+**Phase:** Progression · **Status:** ⏳ done (MapScene hub: districts + owned assets lit gold + boss meter; Menu→Map→Level→Shop→Map loop) — pending run verify · **Depends on:** 13
 
 ## Goal
 The tycoon hub that sells the fantasy: a city map that fills in as you buy.

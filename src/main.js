@@ -3,6 +3,7 @@ import './styles/base.css'
 import BootScene from './scenes/BootScene.js'
 import MenuScene from './scenes/MenuScene.js'
 import LevelScene from './scenes/LevelScene.js'
+import MapScene from './scenes/MapScene.js'
 import ShopScene from './scenes/ShopScene.js'
 import BossWinScene from './scenes/BossWinScene.js'
 
@@ -24,7 +25,7 @@ const config = {
     default: 'arcade',
     arcade: { gravity: { y: 0 }, debug: false }
   },
-  scene: [BootScene, MenuScene, LevelScene, ShopScene, BossWinScene]
+  scene: [BootScene, MenuScene, MapScene, LevelScene, ShopScene, BossWinScene]
 }
 
 // eslint-disable-next-line no-new

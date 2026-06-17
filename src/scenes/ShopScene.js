@@ -53,10 +53,10 @@ export default class ShopScene extends Phaser.Scene {
     this.renderList()
 
     // continue
-    this.makeButton(W / 2, H - 120, '▶ לשלב הבא', 0x1e8a7a, 0x146357, () => {
+    this.makeButton(W / 2, H - 120, '🗺️ חזרה למפה', 0x1e8a7a, 0x146357, () => {
       advance(this.profile, this.levels)
       saveProfile()
-      this.scene.start('Level')
+      this.scene.start('Map')
     })
 
     this.refreshWallet()

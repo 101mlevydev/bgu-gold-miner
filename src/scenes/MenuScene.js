@@ -61,11 +61,11 @@ export default class MenuScene extends Phaser.Scene {
       const p = resetProfile()
       p.character = profile.character
       saveProfile()
-      this.scene.start('Level')
+      this.scene.start('Map')
     })
 
     if (hasSave()) {
-      this.makeButton(cx, 980, 'המשך', C.terra, C.terraD, () => this.scene.start('Level'))
+      this.makeButton(cx, 980, 'המשך', C.terra, C.terraD, () => this.scene.start('Map'))
     }
 
     // Mute toggle (audio wired in Step 17)
