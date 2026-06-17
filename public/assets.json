@@ -6,14 +6,14 @@
     { "id": "falafelStand", "label": "דוכן פלאפל", "district": "center", "tier": 1, "price": 500, "bossPoints": 5, "perk": { "type": "passiveIncome", "value": 25 }, "sprite": "falafel" },
     { "id": "shukStall", "label": "דוכן בשוק", "district": "center", "tier": 1, "price": 450, "bossPoints": 5, "perk": { "type": "passiveIncome", "value": 22 }, "sprite": "shuk" },
 
-    { "id": "benji", "label": "בנג׳י", "district": "campus", "tier": 2, "price": 900, "bossPoints": 8, "perk": { "type": "time", "value": 3 }, "sprite": "benji" },
-    { "id": "friends", "label": "פרינדס", "district": "campus", "tier": 2, "price": 950, "bossPoints": 8, "perk": { "type": "time", "value": 3 }, "sprite": "friends" },
-    { "id": "parkHaSofrim", "label": "פארק הסופרים", "district": "center", "tier": 2, "price": 1200, "bossPoints": 8, "perk": { "type": "time", "value": 4 }, "sprite": "park" },
-    { "id": "grandCanyon", "label": "גרנד קניון", "district": "malls", "tier": 2, "price": 1800, "bossPoints": 10, "perk": { "type": "time", "value": 4 }, "sprite": "grandcanyon" },
+    { "id": "benji", "label": "בנג׳י", "district": "campus", "tier": 2, "price": 900, "bossPoints": 8, "perk": { "type": "heart", "value": 1 }, "sprite": "benji" },
+    { "id": "friends", "label": "פרינדס", "district": "campus", "tier": 2, "price": 950, "bossPoints": 8, "perk": { "type": "heart", "value": 1 }, "sprite": "friends" },
+    { "id": "parkHaSofrim", "label": "פארק הסופרים", "district": "center", "tier": 2, "price": 1200, "bossPoints": 8, "perk": { "type": "heart", "value": 1 }, "sprite": "park" },
+    { "id": "grandCanyon", "label": "גרנד קניון", "district": "malls", "tier": 2, "price": 1800, "bossPoints": 10, "perk": { "type": "heart", "value": 1 }, "sprite": "grandcanyon" },
 
     { "id": "ringelblum", "label": "רינגלבלום", "district": "old-city", "tier": 3, "price": 1500, "bossPoints": 12, "perk": { "type": "clawSpeed", "value": 1.15 }, "sprite": "ringelblum" },
     { "id": "masada", "label": "מצדה", "district": "old-city", "tier": 3, "price": 1500, "bossPoints": 12, "perk": { "type": "clawSpeed", "value": 1.15 }, "sprite": "masada" },
-    { "id": "cafeLola", "label": "קפה לולה", "district": "old-city", "tier": 3, "price": 1600, "bossPoints": 12, "perk": { "type": "time", "value": 5 }, "sprite": "lola" },
+    { "id": "cafeLola", "label": "קפה לולה", "district": "old-city", "tier": 3, "price": 1600, "bossPoints": 12, "perk": { "type": "heart", "value": 1 }, "sprite": "lola" },
     { "id": "ashanHazman", "label": "עשן הזמן", "district": "old-city", "tier": 3, "price": 1500, "bossPoints": 12, "perk": { "type": "clawSpeed", "value": 1.1 }, "sprite": "ashan" },
     { "id": "soroka", "label": "סורוקה", "district": "center", "tier": 3, "price": 2000, "bossPoints": 12, "perk": { "type": "insurance", "value": 1 }, "sprite": "soroka" },
 

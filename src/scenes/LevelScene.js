@@ -5,8 +5,9 @@ import { loadProfile, saveProfile } from '../state.js'
 import { resolvePerks } from '../systems/perks.js'
 import { sfx } from '../lib/audio.js'
 
-// Playable mine level: claw + crafted item tokens + ₪ scoring + timer + target + juice.
-// (Shop/Map/Boss/audio come in later steps; this is the polished core loop.)
+// Mine level: claw + crafted item tokens + ₪ scoring + crafted tokens + juice.
+// COMPLETION-BASED (no timer): reach the ₪ target to win; obstacles cost a heart;
+// lose all hearts → retry. Base 3 hearts (+heart perks).
 
 const EMOJI = {
   psychometric747: '🎯', scholarship: '💰', dorms: '🛏️', perfectGrade: '💯',
@@ -18,6 +19,7 @@ const EMOJI = {
 
 const PIT = { x0: 95, x1: 625, y0: 360, y1: 1150 }
 const ITEM_COUNT = 12
+const BASE_HEARTS = 3
 
 export default class LevelScene extends Phaser.Scene {
   constructor() {
@@ -34,15 +36,14 @@ export default class LevelScene extends Phaser.Scene {
     const def = district.levels[this.profile.levelIndex] || district.levels[0]
 
     this.target = def.target
-    this.timeLeft = def.time
     this.obstacleRate = def.obstacleRate
     this.money = 0
-    this.reached = false
     this.over = false
 
-    // perks from owned assets (Step 14)
+    // perks from owned assets
     this.perks = resolvePerks(this.profile, this.registry.get('assets'))
-    this.timeLeft += this.perks.timeBonus
+    this.maxHearts = BASE_HEARTS + (this.perks.hearts || 0)
+    this.hearts = this.maxHearts
     this.incomeMult = this.perks.incomeMult
     this.insurance = this.perks.insurance
     this.grabRadius = 52 + this.perks.magnet
@@ -51,7 +52,7 @@ export default class LevelScene extends Phaser.Scene {
     this.valuables = all.filter((i) => i.kind === 'valuable')
     this.obstacles = all.filter((i) => i.kind === 'obstacle')
 
-    // crafted background: warm vertical gradient + a dig-pit panel
+    // crafted background + dig pit
     const bg = this.add.graphics()
     bg.fillGradientStyle(0xfff7ea, 0xfff7ea, 0xead2a8, 0xdcc096, 1)
     bg.fillRect(0, 0, W, H)
@@ -61,24 +62,20 @@ export default class LevelScene extends Phaser.Scene {
     pit.lineStyle(3, 0xe0c79a, 1)
     pit.strokeRoundedRect(40, PIT.y0 - 60, W - 80, 200, { tl: 28, tr: 28, bl: 0, br: 0 })
 
-    // HUD bar (rounded bottom corners for craft)
+    // HUD
     const hud = this.add.graphics()
     hud.fillStyle(0xd9743b, 1)
     hud.fillRoundedRect(-12, -12, W + 24, 162, { tl: 0, tr: 0, bl: 26, br: 26 })
-    this.add
-      .text(W / 2, 36, district.label, {
-        fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '26px', color: '#fff7ea'
-      })
-      .setOrigin(0.5)
-    this.moneyText = this.add
-      .text(W - 26, 100, '', { fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '42px', color: '#ffffff', fontStyle: 'bold' })
-      .setOrigin(1, 0.5)
-    this.timerText = this.add
-      .text(W / 2, 100, '', { fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '42px', color: '#ffffff', fontStyle: 'bold' })
-      .setOrigin(0.5)
-    this.targetText = this.add
-      .text(26, 100, '', { fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '34px', color: '#fff7ea' })
-      .setOrigin(0, 0.5)
+    this.add.text(W / 2, 36, district.label, {
+      fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '26px', color: '#fff7ea'
+    }).setOrigin(0.5)
+    this.moneyText = this.add.text(W - 26, 100, '', {
+      fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '42px', color: '#ffffff', fontStyle: 'bold'
+    }).setOrigin(1, 0.5)
+    this.heartsText = this.add.text(W / 2, 100, '', { fontSize: '34px' }).setOrigin(0.5)
+    this.targetText = this.add.text(26, 100, '', {
+      fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '34px', color: '#fff7ea'
+    }).setOrigin(0, 0.5)
     this.refreshHud()
 
     // items
@@ -91,12 +88,8 @@ export default class LevelScene extends Phaser.Scene {
     this.claw.onCollect = (item) => this.collect(item)
     this.claw.clawSpeedMult = this.perks.reelMult
 
-    // input
     this.input.on('pointerdown', () => this.claw.drop())
     this.input.keyboard.on('keydown-SPACE', () => this.claw.drop())
-
-    // timer
-    this.tickEvent = this.time.addEvent({ delay: 1000, loop: true, callback: () => this.tick() })
   }
 
   update(time, delta) {
@@ -105,8 +98,8 @@ export default class LevelScene extends Phaser.Scene {
 
   refreshHud() {
     this.moneyText.setText(`💰 ${this.money}`)
-    this.timerText.setText(`⏱️ ${Math.max(0, this.timeLeft)}`)
     this.targetText.setText(`🎯 ${this.target}`)
+    this.heartsText.setText('❤️'.repeat(this.hearts) + '🤍'.repeat(this.maxHearts - this.hearts))
   }
 
   weightedPick(list) {
@@ -126,7 +119,6 @@ export default class LevelScene extends Phaser.Scene {
     const y = Phaser.Math.Between(PIT.y0, PIT.y1)
     const display = this.makeToken(data, x, y)
     const item = { display, data, alive: true }
-    // gentle idle pulse (scale only — doesn't fight the claw's position control)
     item.pulse = this.tweens.add({
       targets: display, scale: { from: 0.95, to: 1.05 }, yoyo: true, repeat: -1,
       duration: 1300 + Math.random() * 600, ease: 'Sine.InOut', delay: Math.random() * 800
@@ -150,10 +142,7 @@ export default class LevelScene extends Phaser.Scene {
     for (const it of this.items) {
       if (!it.alive) continue
       const d = Phaser.Math.Distance.Between(x, y, it.display.x, it.display.y)
-      if (d < bestD) {
-        bestD = d
-        best = it
-      }
+      if (d < bestD) { bestD = d; best = it }
     }
     if (best) {
       best.alive = false
@@ -164,72 +153,65 @@ export default class LevelScene extends Phaser.Scene {
   }
 
   collect(item) {
-    let v = item.data.value || 0
-    const good = v >= 0
-    let nullified = false
-    if (good) v = Math.round(v * (this.incomeMult || 1))
-    else if (this.insurance > 0) { this.insurance -= 1; v = 0; nullified = true }
-    const jackpot = v >= 400
-    this.money += v
-    if (item.data.timeBonus) this.timeLeft += item.data.timeBonus
-    if (!nullified && item.data.timePenalty) this.timeLeft = Math.max(0, this.timeLeft - item.data.timePenalty)
-
+    const good = item.data.kind === 'valuable'
     const { x, y } = item.display
-    sfx(jackpot ? 'jackpot' : good ? 'good' : 'bad')
-    shake(this, good ? (jackpot ? 0.018 : 0.007) : 0.012, good ? (jackpot ? 260 : 130) : 180)
-    burst(this, x, y, good ? (jackpot ? 0xffcb3d : 0xf4b740) : 0xc0473b, good ? (jackpot ? 16 : 9) : 8)
-    popText(this, x, y, (v >= 0 ? '+' : '') + v, good ? '#2e9e5b' : '#c0473b')
+
+    if (good) {
+      const v = Math.round((item.data.value || 0) * (this.incomeMult || 1))
+      const jackpot = v >= 400
+      this.money += v
+      sfx(jackpot ? 'jackpot' : 'good')
+      shake(this, jackpot ? 0.018 : 0.007, jackpot ? 260 : 130)
+      burst(this, x, y, jackpot ? 0xffcb3d : 0xf4b740, jackpot ? 16 : 9)
+      popText(this, x, y, `+${v}`, '#2e9e5b')
+    } else if (this.insurance > 0) {
+      this.insurance -= 1
+      sfx('good')
+      burst(this, x, y, 0x1e8a7a, 8)
+      popText(this, x, y, '🛡️', '#1e8a7a')
+    } else {
+      this.hearts -= 1
+      sfx('bad')
+      shake(this, 0.014, 200)
+      burst(this, x, y, 0xc0473b, 8)
+      popText(this, x, y, '💔', '#c0473b')
+    }
 
     this.tweens.killTweensOf(item.display)
     item.display.destroy()
     this.items = this.items.filter((it) => it !== item)
     this.spawnItem()
-
-    if (!this.reached && this.money >= this.target) {
-      this.reached = true
-      this.targetText.setColor('#0a3')
-    }
     this.refreshHud()
+
+    if (this.money >= this.target) this.endLevel(true)
+    else if (this.hearts <= 0) this.endLevel(false)
   }
 
-  tick() {
+  endLevel(win) {
     if (this.over) return
-    this.timeLeft -= 1
-    this.refreshHud()
-    if (this.timeLeft <= 0) this.endLevel()
-  }
-
-  endLevel() {
     this.over = true
-    if (this.tickEvent) this.tickEvent.remove()
     this.input.removeAllListeners()
     const W = this.scale.width
     const H = this.scale.height
-    const win = this.money >= this.target
     if (win) {
-      this.profile.money += this.money // bank level earnings into the wallet
+      this.profile.money += this.money
       saveProfile()
+      sfx('jackpot')
     }
 
     this.add.rectangle(0, 0, W, H, 0x000000, 0.55).setOrigin(0).setDepth(70)
     const panel = this.add.graphics().setDepth(71)
     panel.fillStyle(0xfff7ea, 1)
     panel.fillRoundedRect(W / 2 - 280, 440, 560, 360, 28)
-    this.add
-      .text(W / 2, 520, win ? '🎉 עברת את השלב!' : '⏰ נגמר הזמן', {
-        fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '50px', color: '#b4521f', fontStyle: 'bold'
-      })
-      .setOrigin(0.5).setDepth(72)
-    this.add
-      .text(W / 2, 610, `💰 ${this.money} / 🎯 ${this.target}`, {
-        fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '36px', color: '#3a2a1a'
-      })
-      .setOrigin(0.5).setDepth(72)
-    const btn = this.add
-      .text(W / 2, 720, win ? '▶ לחנות הנכסים' : '↩ עוד ניסיון', {
-        fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '34px', color: '#1e8a7a', fontStyle: 'bold'
-      })
-      .setOrigin(0.5).setDepth(72).setInteractive({ useHandCursor: true })
+    this.add.text(W / 2, 520, win ? '🎉 עברת את השלב!' : '💔 נגמרו הלבבות', {
+      fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '50px', color: '#b4521f', fontStyle: 'bold'
+    }).setOrigin(0.5).setDepth(72)
+    this.add.text(W / 2, 610, `💰 ${this.money} / 🎯 ${this.target}`, {
+      fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '36px', color: '#3a2a1a'
+    }).setOrigin(0.5).setDepth(72)
+    const btn = this.add.text(W / 2, 720, win ? '▶ לחנות הנכסים' : '↩ עוד ניסיון', {
+      fontFamily: 'Heebo, system-ui, sans-serif', fontSize: '34px', color: '#1e8a7a', fontStyle: 'bold'
+    }).setOrigin(0.5).setDepth(72).setInteractive({ useHandCursor: true })
     btn.on('pointerdown', () => this.scene.start(win ? 'Shop' : 'Level'))
   }
 }
