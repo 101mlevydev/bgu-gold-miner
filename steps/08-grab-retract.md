@@ -1,6 +1,6 @@
 # Step 08 — Grab + weight-scaled retract
 
-**Phase:** Core (claw) · **Status:** todo · **Depends on:** 07
+**Phase:** Core (claw) · **Status:** ⏳ first pass authored & builds — needs run/feel tuning · **Depends on:** 07
 
 ## Goal
 The claw grabs an item and reels it back; heavier = slower (risk vs the clock).

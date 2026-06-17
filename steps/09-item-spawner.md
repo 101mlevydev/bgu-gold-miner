@@ -1,6 +1,6 @@
 # Step 09 — ItemSpawner + resolution
 
-**Phase:** Core · **Status:** todo · **Depends on:** 08
+**Phase:** Core · **Status:** ⏳ first pass authored & builds — needs run verify · **Depends on:** 08
 
 ## Goal
 Populate the pit with weighted items; resolve a grabbed item's effect.

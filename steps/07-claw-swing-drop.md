@@ -1,6 +1,6 @@
 # Step 07 — Claw: swing + drop + extend
 
-**Phase:** Core (claw) · **Status:** todo · **Depends on:** 05
+**Phase:** Core (claw) · **Status:** ⏳ first pass authored & builds — needs run/feel tuning · **Depends on:** 05
 
 ## Goal
 The core control: a swinging claw that drops/extends on input. (Feel-critical — prototype here.)

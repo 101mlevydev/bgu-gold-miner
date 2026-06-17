@@ -1,6 +1,6 @@
 # Step 10 — LevelScene (₪ / timer / target / HUD)
 
-**Phase:** Core · **Status:** todo · **Depends on:** 09
+**Phase:** Core · **Status:** ⏳ first pass authored & builds — needs run verify · **Depends on:** 09
 
 ## Goal
 A complete, playable mine level against a money target on a timer.
