@@ -1,0 +1,22 @@
+{
+  "version": "1.0",
+  "items": [
+    { "id": "psychometric747", "label": "747 בפסיכומטרי", "kind": "valuable", "value": 800, "weight": 3, "rarity": 0.03, "timeBonus": 4, "sprite": "psy747", "sfx": "jackpot" },
+    { "id": "scholarship", "label": "מלגה מלאה", "kind": "valuable", "value": 600, "weight": 3, "rarity": 0.03, "timeBonus": 3, "sprite": "scholarship", "sfx": "jackpot" },
+    { "id": "dorms", "label": "קוביה במעונות", "kind": "valuable", "value": 500, "weight": 3, "rarity": 0.05, "timeBonus": 3, "sprite": "dorms", "sfx": "jackpot" },
+    { "id": "perfectGrade", "label": "100 במבחן", "kind": "valuable", "value": 400, "weight": 2, "rarity": 0.05, "timeBonus": 2, "sprite": "grade100", "sfx": "ding" },
+    { "id": "parkingPermit", "label": "תו חניה לקמפוס", "kind": "valuable", "value": 300, "weight": 2, "rarity": 0.06, "timeBonus": 1, "sprite": "permit", "sfx": "ding" },
+    { "id": "goodGrade", "label": "85 בקורס", "kind": "valuable", "value": 150, "weight": 1, "rarity": 0.12, "timeBonus": 0, "sprite": "grade85", "sfx": "ding" },
+    { "id": "marketFind", "label": "מציאה בשוק", "kind": "valuable", "value": 80, "weight": 1, "rarity": 0.12, "timeBonus": 0, "sprite": "market", "sfx": "ding" },
+    { "id": "busOnTime", "label": "אוטובוס שמגיע בזמן", "kind": "valuable", "value": 70, "weight": 1, "rarity": 0.10, "timeBonus": 1, "sprite": "bus", "sfx": "ding" },
+    { "id": "falafel", "label": "פלאפל", "kind": "valuable", "value": 40, "weight": 1, "rarity": 0.20, "timeBonus": 0, "sprite": "falafel", "sfx": "ding" },
+    { "id": "coffee", "label": "קפה של בוקר", "kind": "valuable", "value": 30, "weight": 1, "rarity": 0.20, "timeBonus": 0, "sprite": "coffee", "sfx": "ding" },
+
+    { "id": "moedBet", "label": "מועד ב׳", "kind": "obstacle", "value": -250, "weight": 2, "rarity": 0.08, "timePenalty": 0, "sprite": "moedbet", "sfx": "buzz" },
+    { "id": "hamsin", "label": "חמסין", "kind": "obstacle", "value": -150, "weight": 1, "rarity": 0.12, "timePenalty": 0, "sprite": "hamsin", "sfx": "buzz" },
+    { "id": "parkingTicket", "label": "דו״ח חניה", "kind": "obstacle", "value": -120, "weight": 1, "rarity": 0.10, "timePenalty": 0, "sprite": "ticket", "sfx": "buzz" },
+    { "id": "missedBus", "label": "אוטובוס שברח לך", "kind": "obstacle", "value": -100, "weight": 1, "rarity": 0.08, "timePenalty": 2, "sprite": "missedbus", "sfx": "buzz" },
+    { "id": "trainDelay", "label": "עיכוב ברכבת", "kind": "obstacle", "value": -90, "weight": 1, "rarity": 0.07, "timePenalty": 2, "sprite": "train", "sfx": "buzz" },
+    { "id": "aromaPricey", "label": "אָרומה ביוקר", "kind": "obstacle", "value": -60, "weight": 1, "rarity": 0.08, "timePenalty": 0, "sprite": "aroma", "sfx": "buzz" }
+  ]
+}

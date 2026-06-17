@@ -1,0 +1,192 @@
+<!doctype html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>מכרה הזהב — Design Mockup</title>
+<style>
+  /* ===== Design tokens (warm desert, flat-cartoon) ===== */
+  :root{
+    --sand:#F4E2C4; --sand-2:#EAD2A8; --cream:#FFF7EA;
+    --terra:#D9743B; --terra-d:#B4521F; --sun:#F4B740;
+    --teal:#1E8A7A; --teal-d:#14635７;
+    --ink:#3A2A1A; --muted:#8a6f55; --gold:#FFCB3D;
+    --bad:#C0473B; --good:#2E9E5B;
+    --r:18px; --shadow:0 6px 0 rgba(0,0,0,.12), 0 12px 22px rgba(58,42,26,.18);
+    --font: "Heebo","Assistant",system-ui,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:var(--font);background:#cdb893;color:var(--ink);
+    background-image:radial-gradient(circle at 20% 10%, #e8d2a6 0, transparent 40%),
+      radial-gradient(circle at 80% 90%, #d8be8f 0, transparent 45%);padding:28px}
+  h1.title{text-align:center;color:var(--terra-d);margin:0 0 4px}
+  p.sub{text-align:center;color:#5a4632;margin:0 0 24px}
+  .gallery{display:flex;flex-wrap:wrap;gap:26px;justify-content:center;align-items:flex-start}
+  .screen{width:300px;background:var(--sand);border-radius:26px;padding:14px;box-shadow:var(--shadow);
+    border:3px solid rgba(180,82,31,.25)}
+  .screen .label{font-weight:800;color:var(--terra-d);text-align:center;margin:2px 0 10px;font-size:13px;letter-spacing:.3px}
+  .stage{background:var(--cream);border-radius:18px;height:520px;position:relative;overflow:hidden;
+    border:2px solid rgba(58,42,26,.08)}
+  /* shared bits */
+  .hudbar{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--terra);color:#fff;font-weight:800}
+  .chip{background:rgba(255,255,255,.22);border-radius:999px;padding:3px 10px;font-size:13px}
+  .btn{background:var(--terra);color:#fff;border:none;border-radius:14px;padding:11px 16px;font-weight:800;
+    font-family:var(--font);box-shadow:0 4px 0 var(--terra-d);font-size:15px;cursor:pointer}
+  .btn.teal{background:var(--teal);box-shadow:0 4px 0 var(--teal-d)}
+  .btn.ghost{background:#fff;color:var(--terra-d);box-shadow:0 4px 0 #e2c79c}
+  .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:18px}
+  .big{font-size:40px}
+
+  /* ===== 1. MENU + CHARACTER SELECT ===== */
+  .logo{font-size:30px;font-weight:900;color:var(--terra-d);text-shadow:2px 2px 0 var(--sun)}
+  .chars{display:flex;gap:10px}
+  .char{flex:1;background:#fff;border-radius:16px;padding:10px;border:3px solid transparent;box-shadow:0 4px 0 #e2c79c}
+  .char.sel{border-color:var(--teal);box-shadow:0 4px 0 var(--teal-d)}
+  .char .ava{font-size:40px}
+  .char small{display:block;font-weight:800;margin-top:4px;font-size:12px;color:var(--ink)}
+
+  /* ===== 2. LEVEL ===== */
+  .pit{position:absolute;inset:42px 0 0;}
+  .claw{position:absolute;top:0;right:46%;font-size:26px}
+  .rope{position:absolute;top:0;right:calc(46% + 9px);width:3px;height:120px;background:var(--ink);opacity:.5}
+  .item{position:absolute;font-size:30px;filter:drop-shadow(0 3px 0 rgba(0,0,0,.15))}
+  .tgt{position:absolute;bottom:10px;right:10px;left:10px;background:var(--teal);color:#fff;border-radius:12px;
+    padding:7px 10px;font-weight:800;text-align:center;font-size:13px}
+
+  /* ===== 3. SHOP ===== */
+  .card{display:flex;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:10px;margin:8px 10px;box-shadow:0 3px 0 #e2c79c}
+  .card .ico{font-size:26px}
+  .card .meta{flex:1}
+  .card .meta b{display:block;font-size:14px}
+  .card .meta span{font-size:11px;color:var(--muted)}
+  .price{background:var(--sun);color:#5a3b00;border-radius:999px;padding:4px 9px;font-weight:900;font-size:12px}
+
+  /* ===== 4. MAP ===== */
+  .map{position:absolute;inset:42px 8px 8px;}
+  .node{position:absolute;width:54px;height:54px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;
+    font-size:24px;box-shadow:0 3px 0 #d8bd8d;border:3px dashed #c9ad7e}
+  .node.owned{background:var(--gold);border:3px solid var(--terra-d);box-shadow:0 3px 0 var(--terra-d)}
+  .flag{position:absolute;top:-12px;right:-6px;font-size:16px}
+  .bossmeter{position:absolute;top:6px;right:10px;left:10px;background:rgba(255,255,255,.7);border-radius:999px;height:16px;overflow:hidden}
+  .bossmeter i{display:block;height:100%;width:62%;background:linear-gradient(90deg,var(--sun),var(--gold))}
+
+  /* ===== 5. BOSS WIN ===== */
+  .crown{font-size:64px;animation:pop 1s infinite alternate}
+  @keyframes pop{to{transform:scale(1.08) rotate(-3deg)}}
+  .confetti span{position:absolute;font-size:18px;animation:fall 2.4s linear infinite}
+  @keyframes fall{from{transform:translateY(-20px)}to{transform:translateY(540px)}}
+
+  .note{max-width:900px;margin:30px auto 0;background:var(--cream);border-radius:16px;padding:16px 20px;color:#5a4632;line-height:1.6}
+  .note b{color:var(--terra-d)}
+  .responsive{display:flex;gap:16px;justify-content:center;margin-top:8px;flex-wrap:wrap}
+  .frame{background:var(--sand);border-radius:16px;padding:8px;box-shadow:var(--shadow);text-align:center;font-size:11px;font-weight:800;color:var(--terra-d)}
+  .frame .scr{background:var(--cream);border-radius:10px;margin-top:6px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+  .phone .scr{width:120px;height:200px}
+  .tab .scr{width:200px;height:160px}
+  .lap .scr{width:280px;height:150px}
+</style>
+</head>
+<body>
+  <h1 class="title">מכרה הזהב של בן-גוריון — Visual Mockup</h1>
+  <p class="sub">flat-cartoon · warm-desert palette · RTL · emoji = art placeholders (real sprites later)</p>
+
+  <div class="gallery">
+
+    <!-- 1. MENU + CHARACTER SELECT -->
+    <div class="screen">
+      <div class="label">① תפריט + בחירת דמות</div>
+      <div class="stage">
+        <div class="center">
+          <div class="logo">⛏️ מכרה הזהב</div>
+          <div style="color:var(--muted);font-size:12px;margin-top:-6px">תהפוך לבוס של באר שבע</div>
+          <div class="chars">
+            <div class="char sel"><div class="ava">🎒</div><small>הסטודנט</small></div>
+            <div class="char"><div class="ava">🧖‍♀️</div><small>הבאר־שבעית<br>(פיג'מה + כפכפים)</small></div>
+          </div>
+          <button class="btn teal">▶ משחק חדש</button>
+          <button class="btn ghost">המשך · 🏆 שיא: 8,400 ₪</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. LEVEL -->
+    <div class="screen">
+      <div class="label">② שלב (טופר + HUD)</div>
+      <div class="stage">
+        <div class="hudbar"><span class="chip">💰 1,250 ₪</span><span class="chip">⏱️ 0:38</span><span class="chip">🎯 2,000</span></div>
+        <div class="pit">
+          <div class="rope"></div><div class="claw">🪝</div>
+          <div class="item" style="top:170px;right:30px">🥙</div>
+          <div class="item" style="top:230px;right:120px">📚</div>
+          <div class="item" style="top:300px;right:60px">🛏️</div>
+          <div class="item" style="top:260px;left:40px">☕</div>
+          <div class="item" style="top:330px;left:90px">🌡️</div>
+          <div class="item" style="top:380px;right:140px">🅿️</div>
+          <div class="tgt">הגעת ל-₪2,000 לפני שנגמר הזמן!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. SHOP -->
+    <div class="screen">
+      <div class="label">③ חנות הנכסים</div>
+      <div class="stage">
+        <div class="hudbar"><span>🏪 חנות</span><span class="chip">💰 1,250 ₪</span></div>
+        <div class="card"><div class="ico">🛏️</div><div class="meta"><b>קוביה במעונות</b><span>הכנסה פסיבית +</span></div><span class="price">400 ₪</span></div>
+        <div class="card"><div class="ico">🎨</div><div class="meta"><b>קפה לולה</b><span>+5 שניות לשעון</span></div><span class="price">1,500 ₪</span></div>
+        <div class="card"><div class="ico">🍺</div><div class="meta"><b>בנג'י</b><span>+זמן</span></div><span class="price">900 ₪</span></div>
+        <div class="card" style="opacity:.5"><div class="ico">🏟️</div><div class="meta"><b>אצטדיון טוטו טרנר</b><span>מכפיל הכנסה ×1.2</span></div><span class="price">6,000 ₪</span></div>
+        <button class="btn teal" style="margin:6px 10px;width:calc(100% - 20px)">↩ חזרה למפה</button>
+      </div>
+    </div>
+
+    <!-- 4. MAP -->
+    <div class="screen">
+      <div class="label">④ מפת השכונות (נכסים נדלקים)</div>
+      <div class="stage">
+        <div class="hudbar"><span>🗺️ העיר העתיקה</span><span class="chip">👑 62%</span></div>
+        <div class="map">
+          <div class="bossmeter"><i></i></div>
+          <div class="node owned" style="top:40px;right:20px">🛏️<span class="flag">🚩</span></div>
+          <div class="node owned" style="top:60px;left:30px">🎨<span class="flag">🚩</span></div>
+          <div class="node" style="top:150px;right:70px">🍺</div>
+          <div class="node" style="top:230px;left:50px">🏟️</div>
+          <div class="node" style="top:320px;right:30px">🏛️</div>
+          <button class="btn teal" style="position:absolute;bottom:8px;right:10px;left:10px">▶ שלב הבא</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. BOSS WIN -->
+    <div class="screen">
+      <div class="label">⑤ הכתרה — בוס של באר שבע</div>
+      <div class="stage" style="background:linear-gradient(160deg,#2a1c0e,#5a3a18)">
+        <div class="confetti">
+          <span style="right:30px">🎉</span><span style="right:120px;animation-delay:.6s">✨</span>
+          <span style="left:40px;animation-delay:1.1s">🎊</span><span style="left:120px;animation-delay:.3s">⭐</span>
+        </div>
+        <div class="center" style="color:#fff">
+          <div class="crown">👑</div>
+          <div style="font-size:22px;font-weight:900;color:var(--gold)">בוס של באר שבע!</div>
+          <div style="font-size:13px;opacity:.85">קנית את לשכת רוביק דנילוביץ' 🏛️</div>
+          <div style="font-size:12px;opacity:.7">סה"כ: 14,200 ₪ · 9 נכסים · 4 דקות</div>
+          <button class="btn">📸 כרטיס שיתוף</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="note">
+    <b>הערות עיצוב:</b> פלטת מדבר חמה (חול/טרקוטה/שמש) + טיל (teal) לפעולות; כפתורים "תפוחים" עם
+    צל תחתון; פינות מעוגלות; טקסט בעברית RTL ומספרים LTR ב-HUD. האימוג'י הם <b>placeholders</b> —
+    יוחלפו בספרייטים שטוחים בסגנון קריקטורה של המקומות האמיתיים. הדמויות: 🎒 הסטודנט / 🧖‍♀️
+    הבאר־שבעית בפיג'מה וכפכפי פרווה.
+    <div class="responsive">
+      <div class="frame phone">📱 טלפון (portrait)<div class="scr">שלב מלא</div></div>
+      <div class="frame tab">📱 iPad / טאבלט<div class="scr">אותו קנבס, מוגדל</div></div>
+      <div class="frame lap">💻 לפטופ<div class="scr">קנבס ממורכז + מסגרת</div></div>
+    </div>
+  </div>
+</body>
+</html>

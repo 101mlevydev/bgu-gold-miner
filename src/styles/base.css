@@ -1,0 +1,44 @@
+:root {
+  /* warm-desert palette (from the approved mockup) */
+  --sand: #f4e2c4;
+  --sand-2: #ead2a8;
+  --cream: #fff7ea;
+  --terra: #d9743b;
+  --terra-d: #b4521f;
+  --sun: #f4b740;
+  --teal: #1e8a7a;
+  --teal-d: #146357;
+  --ink: #3a2a1a;
+  --muted: #8a6f55;
+  --gold: #ffcb3d;
+  --bad: #c0473b;
+  --good: #2e9e5b;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #cdb893;
+  overflow: hidden;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+  font-family: "Heebo", "Assistant", system-ui, Arial, sans-serif;
+}
+
+#game {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#game canvas {
+  /* let Phaser's Scale.FIT manage size; keep crisp + centered */
+  max-width: 100%;
+  max-height: 100%;
+}

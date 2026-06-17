@@ -1,0 +1,55 @@
+{
+  "version": "1.0",
+  "districts": [
+    {
+      "id": "campus",
+      "label": "קמפוס מרקוס",
+      "order": 1,
+      "unlockRequiresAssets": 0,
+      "levels": [
+        { "target": 800, "time": 60, "obstacleRate": 0.10 },
+        { "target": 1100, "time": 60, "obstacleRate": 0.12 }
+      ]
+    },
+    {
+      "id": "old-city",
+      "label": "העיר העתיקה",
+      "order": 2,
+      "unlockRequiresAssets": 2,
+      "levels": [
+        { "target": 1600, "time": 58, "obstacleRate": 0.15 },
+        { "target": 2000, "time": 58, "obstacleRate": 0.16 }
+      ]
+    },
+    {
+      "id": "center",
+      "label": "מרכז העיר",
+      "order": 3,
+      "unlockRequiresAssets": 5,
+      "levels": [
+        { "target": 2600, "time": 55, "obstacleRate": 0.18 },
+        { "target": 3000, "time": 55, "obstacleRate": 0.19 }
+      ]
+    },
+    {
+      "id": "malls",
+      "label": "הקניונים",
+      "order": 4,
+      "unlockRequiresAssets": 8,
+      "levels": [
+        { "target": 3800, "time": 52, "obstacleRate": 0.20 },
+        { "target": 4400, "time": 52, "obstacleRate": 0.21 }
+      ]
+    },
+    {
+      "id": "rule",
+      "label": "השלטון על העיר",
+      "order": 5,
+      "unlockRequiresAssets": 11,
+      "levels": [
+        { "target": 5200, "time": 50, "obstacleRate": 0.22 },
+        { "target": 6000, "time": 50, "obstacleRate": 0.24 }
+      ]
+    }
+  ]
+}

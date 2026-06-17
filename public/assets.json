@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "bossMeterGoal": 120,
+  "assets": [
+    { "id": "dormRoom", "label": "קוביה במעונות", "district": "campus", "tier": 1, "price": 400, "bossPoints": 5, "perk": { "type": "passiveIncome", "value": 20 }, "sprite": "dorms" },
+    { "id": "falafelStand", "label": "דוכן פלאפל", "district": "center", "tier": 1, "price": 500, "bossPoints": 5, "perk": { "type": "passiveIncome", "value": 25 }, "sprite": "falafel" },
+    { "id": "shukStall", "label": "דוכן בשוק", "district": "center", "tier": 1, "price": 450, "bossPoints": 5, "perk": { "type": "passiveIncome", "value": 22 }, "sprite": "shuk" },
+
+    { "id": "benji", "label": "בנג׳י", "district": "campus", "tier": 2, "price": 900, "bossPoints": 8, "perk": { "type": "time", "value": 3 }, "sprite": "benji" },
+    { "id": "friends", "label": "פרינדס", "district": "campus", "tier": 2, "price": 950, "bossPoints": 8, "perk": { "type": "time", "value": 3 }, "sprite": "friends" },
+    { "id": "parkHaSofrim", "label": "פארק הסופרים", "district": "center", "tier": 2, "price": 1200, "bossPoints": 8, "perk": { "type": "time", "value": 4 }, "sprite": "park" },
+    { "id": "grandCanyon", "label": "גרנד קניון", "district": "malls", "tier": 2, "price": 1800, "bossPoints": 10, "perk": { "type": "time", "value": 4 }, "sprite": "grandcanyon" },
+
+    { "id": "ringelblum", "label": "רינגלבלום", "district": "old-city", "tier": 3, "price": 1500, "bossPoints": 12, "perk": { "type": "clawSpeed", "value": 1.15 }, "sprite": "ringelblum" },
+    { "id": "masada", "label": "מצדה", "district": "old-city", "tier": 3, "price": 1500, "bossPoints": 12, "perk": { "type": "clawSpeed", "value": 1.15 }, "sprite": "masada" },
+    { "id": "cafeLola", "label": "קפה לולה", "district": "old-city", "tier": 3, "price": 1600, "bossPoints": 12, "perk": { "type": "time", "value": 5 }, "sprite": "lola" },
+    { "id": "ashanHazman", "label": "עשן הזמן", "district": "old-city", "tier": 3, "price": 1500, "bossPoints": 12, "perk": { "type": "clawSpeed", "value": 1.1 }, "sprite": "ashan" },
+    { "id": "soroka", "label": "סורוקה", "district": "center", "tier": 3, "price": 2000, "bossPoints": 12, "perk": { "type": "insurance", "value": 1 }, "sprite": "soroka" },
+
+    { "id": "fringeTheater", "label": "תיאטרון הקצה", "district": "old-city", "tier": 4, "price": 4000, "bossPoints": 20, "perk": { "type": "incomeMult", "value": 1.15 }, "sprite": "fringe" },
+    { "id": "oldCity", "label": "העיר העתיקה", "district": "old-city", "tier": 4, "price": 5000, "bossPoints": 22, "perk": { "type": "incomeMult", "value": 1.15 }, "sprite": "oldcity" },
+    { "id": "turnerStadium", "label": "אצטדיון טוטו טרנר", "district": "malls", "tier": 4, "price": 6000, "bossPoints": 25, "perk": { "type": "incomeMult", "value": 1.2 }, "sprite": "turner" },
+
+    { "id": "bgu", "label": "אוניברסיטת בן-גוריון", "district": "rule", "tier": 5, "price": 8000, "bossPoints": 30, "perk": { "type": "incomeMult", "value": 1.3 }, "sprite": "bgu" },
+    { "id": "mayorOffice", "label": "לשכת ראש העיר רוביק דנילוביץ׳", "district": "rule", "tier": 5, "price": 12000, "bossPoints": 50, "perk": { "type": "incomeMult", "value": 1.5 }, "sprite": "cityhall", "win": true }
+  ]
+}
