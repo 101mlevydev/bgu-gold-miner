@@ -3,6 +3,9 @@ import { loadProfile, resetProfile } from '../state.js'
 import { getCharacter } from '../systems/CharacterManager.js'
 import { sfx } from '../lib/audio.js'
 
+const SHARE_URL_OVERRIDE = ''
+function shareUrl(extra = '') { const base = SHARE_URL_OVERRIDE || (location.origin + location.pathname); return base + extra }
+
 // The payoff: crowned Boss of Be'er Sheva (bought the mayor's office).
 export default class BossWinScene extends Phaser.Scene {
   constructor() {
@@ -51,6 +54,10 @@ export default class BossWinScene extends Phaser.Scene {
     this.makeButton(W / 2, 960, '🔁 משחק חדש', 0x1e8a7a, 0x146357, () => {
       resetProfile()
       this.scene.start('Menu')
+    })
+    this.makeButton(W / 2, 1070, '📤 שתף', 0x25a35a, 0x18713d, () => {
+      const msg = 'נהייתי בוס של באר שבע 👑 בא לך לנסות לעקוף אותי?'
+      window.open('https://wa.me/?text=' + encodeURIComponent(msg + ' ' + shareUrl()), '_blank')
     })
   }
 
