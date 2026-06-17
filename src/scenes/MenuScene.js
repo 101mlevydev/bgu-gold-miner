@@ -13,6 +13,16 @@ const C = {
   cream: '#fff7ea'
 }
 
+// BGU suite cross-promo. Fill each url with the app's hub sandbox URL at launch
+// (one-line swap). Empty url = pill rendered but inert (not clickable).
+const SUITE = [
+  { id: 'nuschaon', name: 'נוסחאון',      emoji: '📄', url: '' },
+  { id: 'gold',     name: 'מכרה הזהב',     emoji: '⛏️', url: '' },
+  { id: 'desk',     name: 'מתחת לשולחן',   emoji: '🎮', url: '' },
+  { id: 'beit',     name: 'בית הסטודנט',   emoji: '🏠', url: '' }
+]
+const SELF_ID = 'gold'
+
 export default class MenuScene extends Phaser.Scene {
   constructor() {
     super('Menu')
@@ -69,6 +79,9 @@ export default class MenuScene extends Phaser.Scene {
       this.makeButton(cx, 980, 'המשך', C.terra, C.terraD, () => this.scene.start('Map'))
     }
 
+    // Suite cross-promo (Menu only — never during gameplay)
+    this.makeSuiteFooter(cx, this.scale.height - 90)
+
     // Mute toggle (audio wired in Step 17)
     const muted = this.registry.get('muted') || false
     setMuted(muted)
@@ -118,6 +131,46 @@ export default class MenuScene extends Phaser.Scene {
       const sel = c.id === selectedId
       c.bg.setStrokeStyle(4, sel ? 0x1e8a7a : 0xe2c79c)
       c.bg.setFillStyle(sel ? 0xeafff6 : 0xffffff)
+    })
+  }
+
+  makeSuiteFooter(cx, y) {
+    this.add
+      .text(cx, y - 34, 'עוד כלים לחיי בן-גוריון 👇', {
+        fontFamily: 'Heebo, system-ui, sans-serif',
+        fontSize: '22px',
+        color: '#8a6f55',
+        fontStyle: 'bold'
+      })
+      .setOrigin(0.5)
+
+    const others = SUITE.filter((a) => a.id !== SELF_ID)
+    const gap = 14
+    const pills = others.map((a) => {
+      const live = !!a.url
+      const t = this.add
+        .text(0, y, `${a.emoji} ${a.name}`, {
+          fontFamily: 'Heebo, system-ui, sans-serif',
+          fontSize: '20px',
+          color: live ? C.tealD : '#a9967f',
+          backgroundColor: '#ffffff',
+          padding: { x: 12, y: 6 }
+        })
+        .setOrigin(0.5)
+      if (live) {
+        t.setInteractive({ useHandCursor: true })
+        t.on('pointerup', () => window.open(a.url, '_blank', 'noopener'))
+      }
+      return t
+    })
+
+    // center the row horizontally
+    const widths = pills.map((t) => t.width)
+    const total = widths.reduce((s, w) => s + w, 0) + gap * (pills.length - 1)
+    let x = cx - total / 2
+    pills.forEach((t, i) => {
+      t.x = x + widths[i] / 2
+      x += widths[i] + gap
     })
   }
 
